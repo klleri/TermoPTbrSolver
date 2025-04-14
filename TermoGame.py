@@ -170,10 +170,11 @@ def play_game():
         print("\n Histórico ")
         for feedback_line in feedback_history: # Renamed loop variable 'fb' to 'feedback_line'
             print(feedback_line)
-        print("-------------------")
+        print("-" * 20)
 
         if is_correct:
-            print("\n=======================================")
+            print("\n")
+            print("=" * 20)
             if USE_COLORS:
                  
                 print(f"{COLOR_GREEN}Parabéns! Você acertou a palavra!{COLOR_RESET}")
@@ -182,13 +183,14 @@ def play_game():
                  print("Parabéns! Você acertou a palavra!")
              
             print(f"A palavra era: {secret_word.upper()}")
-            print("========================================")
+            print("=" * 20)
             return # End of game (victory)
 
         attempts_made += 1
 
     # If the loop finishes, the player lost
-    print("\n=======================================")
+    print("\n")
+    print("=" * 20)
     if USE_COLORS:
          
         print(f"{COLOR_GRAY}Você usou todas as suas tentativas!{COLOR_RESET}")
@@ -197,7 +199,7 @@ def play_game():
         print("Você usou todas as suas tentativas!")
     
     print(f"A palavra secreta era: {secret_word.upper()}")
-    print("======================================")
+    print("=" * 20)
 
 
 if __name__ == "__main__":
