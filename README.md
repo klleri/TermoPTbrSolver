@@ -55,6 +55,10 @@ This script allows you to play a command-line version of Termo.
     ```
 3.  Follow the on-screen instructions to play.
 
+### Solver
+
+![image](https://github.com/user-attachments/assets/15529c74-5926-4b33-8ae9-941a28d76ec6)
+
 ## Prerequisites
 
 * Python 3
@@ -62,7 +66,4 @@ This script allows you to play a command-line version of Termo.
 
 ## Future Work: The Solver
 
-The next phase of this project involves creating the actual **Termo solver script**. This future script will:
-
-* Use the cleaned word list (`palavras_5letras.txt`).
-* Implement logic to suggest possible Termo answers based on user input about correct letters (green), misplaced letters (yellow), and incorrect letters (gray) from previous guesses.
+* Improve solver solution
