@@ -59,6 +59,11 @@ This script allows you to play a command-line version of Termo.
 
 ![image](https://github.com/user-attachments/assets/15529c74-5926-4b33-8ae9-941a28d76ec6)
 
+1.  Make sure the `palavras_5letras.txt` file exists in the same directory as `solver.py`. (Run the processor script first if needed).
+2.  Run the game script from your terminal:
+    ```bash
+    python solver.py
+    ```
 ## Prerequisites
 
 * Python 3
