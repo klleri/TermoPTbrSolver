@@ -337,17 +337,13 @@ Combina:
 
 ---
 
-
-## Resumo Rapido Para Fala
-
-
-- MiniZinc define a regra matematica.
-- Guloso gera resposta imediata.
-- CP Direto/CP Completo trazem busca mais forte.
-- LS melhora localmente.
-- Two-Phase decompoe empacotamento vs agendamento.
-- LNS reotimiza partes por iteracao.
-- Hybrid junta tudo e escolhe o melhor no tempo disponivel.
+- MiniZinc define a regra matematic
+- Guloso gera resposta imediata
+- CP/CP Completo trazem busca mais forte
+- LS melhora localmente
+- Two-Phase decompoe empacotamento vs agendamento
+- LNS reotimiza partes por iteracao
+- Hybrid junta tudo e escolhe o melhor no tempo disponivel
 
 
 ---
@@ -371,64 +367,6 @@ Esta secao complementa o documento com comparacoes diretas entre os metodos.
 | Local Search | herda do guloso | move periodos localmente | busca local | melhora barata do guloso | pode parar em otimo local |
 | Two-Phase | heuristica fixa paletes | CP-SAT so no scheduling | decomposicao em 2 fases | bom equilibrio tempo/qualidade | paletizacao fica congelada |
 | LNS | relaxa parte da solucao | CP em subproblemas | vizinhancas grandes iterativas | melhora incumbente com custo controlado | depende da qualidade inicial |
-| Hybrid | combina varios metodos | combina varios metodos | portfolio com budget | maior robustez pratica | pipeline mais complexo |
-
-
-### 2) Comparacao de estrategia (Two-Phase vs LNS)
-
-
-- `Two-Phase`:
-  - corta o problema por tipo de decisao.
-  - primeiro decide paletes, depois otimiza so o tempo/producao.
-  - bom quando voce quer um CP menor e previsivel.
-- `LNS`:
-  - mantem o modelo CP, mas reotimiza apenas parte da solucao a cada iteracao.
-  - fixa a maior parte e relaxa um subconjunto (`relax_set`).
-  - bom para refinar incumbente sem reabrir tudo.
-
-
-### 3) Comparacao quantitativa (arquivos do projeto)
-
-
-Fontes:
-- `comparacao_ffd_mochila_eniac.csv`
-- `comparacao_cp_direto_eniac.csv`
-- `comparacao_cp_vs_guloso_vs_saida.csv`
-- `resultados/multiseed_10x30/summary_by_method.csv`
-
-
-#### 3.1 FFD vs Mochila (no Guloso)
-- Total: 17 instancias
-- Mochila melhor: 0
-- FFD melhor: 0
-- Empate: 17
-
-
-Leitura:
-- neste conjunto de testes, trocar `FFD` por `Mochila` nao mudou o objetivo final.
-
-
-#### 3.2 CP Direto vs FFD
-- Total: 17 instancias
-- CP melhor: 8
-- FFD melhor: 2
-- Empate: 7
-- Status CP Direto: 11 `OPTIMAL`, 6 `FEASIBLE`
-
-
-Leitura:
-- CP Direto tende a melhorar qualidade em parte relevante das instancias.
-
-
-#### 3.3 CP-SAT vs Guloso
-- Comparando onde ambos possuem objetivo:
-  - CP melhor: 9
-  - Guloso melhor: 0
-  - Empate: 7
-
-
-Leitura:
-- CP e dominante sobre o guloso nesse recorte, com varios empates em casos mais simples.
 
 
 #### 3.4 Multi-seed 10x30 (170 execucoes por metodo)
@@ -445,119 +383,15 @@ Leitura:
 | ls | 41.18 | 2.5641 | 7.04 |
 
 
-Como ler essa tabela:
 - `BKS hit rate`: porcentagem de execucoes em que o metodo atingiu o melhor valor conhecido (BKS).
 - `Gap medio (%)`: distancia percentual media para o BKS.
   - formula: `100 * (obj_metodo - BKS) / BKS`
   - quanto menor, melhor.
 
-
-Exemplo com os valores perguntados:
-- `92.94` em `BKS hit rate` significa que o metodo acertou o BKS em ~93 de cada 100 execucoes.
-  - neste experimento (170 execucoes): `158/170`.
-- `41.18` em `BKS hit rate` significa que o metodo acertou o BKS em ~41 de cada 100 execucoes.
-  - neste experimento (170 execucoes): `70/170`.
-
-
-Leitura:
-- `hybrid` e `cp_tight` lideram qualidade.
-- `two_phase` entrega bom custo-beneficio de tempo.
-- `guloso` e `ls` sao extremamente rapidos, mas com gap medio maior.
-
-
-### 4) Quando usar cada metodo (regra pratica)
-
-
 - Se prioridade e velocidade imediata: `Guloso`.
 - Se prioridade e qualidade maxima com validacao forte: `CP-SAT completo` / `CP-tight`.
 - Se quer equilibrio tempo vs qualidade: `Two-Phase`.
 - Se ja tem uma boa solucao e quer melhorar incrementalmente: `LNS`.
-- Se quer robustez automatica em budget fixo: `Hybrid`.
-
-
----
-
-
-## Comparacao Direta Com MiniZinc
-
-
-### 1) Como interpretar a comparacao
-
-
-- `gap_metodo_vs_saida = obj_metodo - saida_best_obj`
-- Se gap < 0: metodo encontrou objetivo melhor que o melhor registrado no `minizinc`.
-- Se gap = 0: empate com `minizinc`.
-- Se gap > 0: metodo ficou pior que `minizinc`.
-
-
-Importante:
-- status encontrados no conjunto `benchmark_todos.csv`:
-  - `COMPLETE`: 5 instancias
-  - `PARTIAL`: 5 instancias
-  - `EMPTY`: 4 instancias
-  - `UNKNOWN`: 3 instancias
-- por isso mostramos dois recortes:
-  - apenas `COMPLETE` (mais conservador);
-  - todas com referencia numerica (`saida_best_obj` disponivel), inclusive `PARTIAL`.
-
-
-### 2) Recorte conservador: apenas `SAIDA = COMPLETE` (n=5)
-
-
-| Metodo | Melhor que MiniZinc | Pior que MiniZinc | Empate |
-|---|---:|---:|---:|
-| guloso | 0 | 4 | 1 |
-| cp | 1 | 2 | 2 |
-| cp_tight | 1 | 2 | 2 |
-| ls | 0 | 4 | 1 |
-| lns | 1 | 2 | 2 |
-| two_phase | 1 | 2 | 2 |
-| hybrid | 1 | 2 | 2 |
-| cp_direto | 1 | 2 | 2 |
-
-
-Leitura:
-- nos casos `COMPLETE`, os metodos CP (cp/cp_tight/cp_direto) e os refinamentos (lns/two_phase/hybrid) tiveram comportamento parecido.
-- guloso e ls perderam mais vezes nesse recorte.
-
-
-### 3) Recorte ampliado: com referencia numerica (`saida_best_obj`) (n=10)
-
-
-| Metodo | Melhor que MiniZinc | Pior que MiniZinc | Empate | Gap medio |
-|---|---:|---:|---:|---:|
-| guloso | 1 | 8 | 1 | 158.2 |
-| cp | 4 | 3 | 3 | -10.3 |
-| cp_tight | 4 | 2 | 4 | -10.7 |
-| ls | 1 | 8 | 1 | 158.2 |
-| lns | 3 | 5 | 2 | 109.1 |
-| two_phase | 3 | 4 | 3 | 214.5 |
-| hybrid | 4 | 3 | 3 | -10.5 |
-| cp_direto | 4 | 3 | 3 | -9.9 |
-
-
-Leitura:
-- `cp`, `cp_tight`, `hybrid` e `cp_direto` tiveram gap medio negativo (em media, melhores que o valor de referencia do `.SAIDA` nesse recorte).
-- `guloso` e `ls` ficaram mais distantes da referencia.
-- `lns` e `two_phase` melhoram em alguns casos, mas ainda com gap medio positivo no conjunto.
-
-
-### 4) Comparacao conceitual: o que muda em relacao ao MiniZinc
-
-
-- MiniZinc:
-  - modelagem declarativa de alto nivel (global constraints).
-  - excelente referencia para validar regra de negocio e objetivo.
-- CP Python (`cp`, `cp_tight`, `cp_direto`):
-  - mesma logica central, com controle fino de variaveis, cortes e estrategias.
-  - mais flexivel para engenharia de desempenho (UB, tightening, fixacoes).
-- Heuristicas (`guloso`, `ls`):
-  - muito mais rapidas;
-  - qualidade depende mais da instancia.
-- Metodos compostos (`lns`, `two_phase`, `hybrid`):
-  - tentam aproximar qualidade CP com custo controlado.
-  - `hybrid` tende a ser mais robusto no agregado.
-
 
 
 
@@ -580,13 +414,5 @@ Leitura:
 | i63322.dzn | 0 | 1 | 32 | 109 | 105 | 323 | 478 | 91 | 1230 | 1230 |
 | i73722.dzn | 0 | 5 | 42 | 624 | 414 | 1214 | 1446 | 1246 | 1950 | 409110 |
 | i73733.dzn | 0 | 5 | 31 | 288 | 262 | 817 | 1086 | 689 | - | - |
-
-
-Legenda MiniZinc:
-- `----------`: encontrou uma solucao e continua buscando melhoria.
-- `==========`: terminou a busca (prova de otimalidade/encerramento completo).
-- `MiniZinc melhor sol. (ms)`: tempo ate encontrar o melhor `_objective`
-- `MiniZinc final (ms)`: ultimo `% time elapsed`
-
 
 
