@@ -266,10 +266,6 @@ Decompor o problema em duas partes menores:
 - parte temporal de agendar.
 
 
-### Vantagem
-- menos pesado que CP completo;
-- normalmente melhora o "quando produzir" mesmo com paletizacao fixa.
-
 
 ---
 
@@ -289,17 +285,6 @@ Arquivo: `eniac_cp_sat_lns.py`
    - fixa o restante (`fixed_orders`);
    - resolve CP do subproblema.
 3. Atualiza melhor solucao se houver melhora.
-
-
-### Diferenca para Two-Phase
-- Two-Phase: separa por tipo de decisao (paletizar depois agendar).
-- LNS: mantem modelo CP, mas reotimiza so "partes" por iteracao.
-
-
-### "CP curto ou guloso" (conceito)
-- CP curto = tentativa rapida de conseguir incumbente com qualidade.
-- guloso = fallback garantido, muito rapido.
-
 
 ---
 
